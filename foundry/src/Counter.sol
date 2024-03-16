@@ -11,4 +11,9 @@ contract Counter {
     function increment() public {
         number++;
     }
+
+    // Returns the current number
+    function getNumber() public view returns (uint256) {
+        return number;
+    }
 }
