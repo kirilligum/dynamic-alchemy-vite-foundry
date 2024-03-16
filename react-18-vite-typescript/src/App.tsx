@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import CounterABI from './path/to/CounterABI.json'; // Adjust the path to your ABI
+import CounterABI from '../../foundry/out/Counter.sol/Counter.json'; // Adjust the path to your ABI
 const counterAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract's address
 import { createModularAccountAlchemyClient } from "@alchemy/aa-alchemy";
 import { sepolia } from "@alchemy/aa-core";
