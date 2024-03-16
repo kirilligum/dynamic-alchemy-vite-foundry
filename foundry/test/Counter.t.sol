@@ -21,4 +21,11 @@ contract CounterTest is Test {
         counter.setNumber(x);
         assertEq(counter.number(), x);
     }
+
+    // Test for getNumber method
+    function test_GetNumber() public {
+        uint256 testValue = 5;
+        counter.setNumber(testValue);
+        assertEq(counter.getNumber(), testValue, "getNumber did not return the expected value");
+    }
 }
