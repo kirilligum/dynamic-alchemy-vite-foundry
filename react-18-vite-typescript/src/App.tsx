@@ -57,10 +57,31 @@ function Test() {
   }
 
   const [inputValue, setInputValue] = React.useState('');
+  const [currentNumber, setCurrentNumber] = React.useState('Fetching...');
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+
+  const fetchNumber = async () => {
+    if (!dynamicProvider) {
+      console.error('Wallet provider is not initialized.');
+      return;
+    }
+    const signer = dynamicProvider.getSigner();
+    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
+    try {
+      const number = await counterContract.getNumber();
+      setCurrentNumber(number.toString());
+    } catch (error) {
+      console.error('Error fetching number:', error);
+      setCurrentNumber('Error fetching number');
+    }
+  };
+
+  React.useEffect(() => {
+    fetchNumber();
+  }, []);
 
   const handleSubmit = async () => {
     const number = parseInt(inputValue, 10);
@@ -73,6 +94,8 @@ function Test() {
     <div>
       <input type="number" value={inputValue} onChange={handleInputChange} />
       <button onClick={handleSubmit}>Set Number</button>
+      <div>Current Number: {currentNumber}</div>
+      <button onClick={fetchNumber}>Refresh Number</button>
     </div>
   );
 }
