@@ -1,3 +1,6 @@
+import { ethers } from 'ethers';
+import CounterABI from './path/to/CounterABI.json'; // Adjust the path to your ABI
+const counterAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract's address
 import { createModularAccountAlchemyClient } from "@alchemy/aa-alchemy";
 import { sepolia } from "@alchemy/aa-core";
 import { WalletClientSigner, type SmartAccountSigner } from "@alchemy/aa-core";
@@ -34,7 +37,23 @@ function Test() {
     signer: dynamicSigner,
   });
 
-  console.log("provider:", provider)
+  console.log("provider:", provider);
+
+  async function setNumber(value) {
+    if (!dynamicProvider) {
+      console.error('Wallet provider is not initialized.');
+      return;
+    }
+    const signer = dynamicProvider.getSigner();
+    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
+    try {
+      const tx = await counterContract.setNumber(value);
+      await tx.wait();
+      console.log(`Number set to ${value}`);
+    } catch (error) {
+      console.error('Error setting number:', error);
+    }
+  }
 
   return (
     <div>
