@@ -1,3 +1,4 @@
+import React from 'react';
 import { ethers } from 'ethers';
 import CounterABI from '../../foundry/out/Counter.sol/Counter.json'; // Adjust the path to your ABI
 const counterAddress = 'YOUR_CONTRACT_ADDRESS'; // Replace with your contract's address
