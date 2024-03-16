@@ -55,9 +55,23 @@ function Test() {
     }
   }
 
+  const [inputValue, setInputValue] = React.useState('');
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSubmit = async () => {
+    const number = parseInt(inputValue, 10);
+    if (!isNaN(number)) {
+      await setNumber(number);
+    }
+  };
+
   return (
     <div>
-      Test
+      <input type="number" value={inputValue} onChange={handleInputChange} />
+      <button onClick={handleSubmit}>Set Number</button>
     </div>
   );
 }
