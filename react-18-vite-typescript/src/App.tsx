@@ -18,102 +18,60 @@ import "./App.css";
 
 const chain = sepolia;
 
-function Test() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { primaryWallet } = useDynamicContext();
+// function Test() {
+//   const [currentNumber, setCurrentNumber] = React.useState('Fetching...');
 
-  const dynamicProvider = primaryWallet?.connector?.getWalletClient();
 
-  console.log("dynamicProvider:", dynamicProvider);
+//   const fetchNumber = async () => {
+//     // eslint-disable-next-line react-hooks/rules-of-hooks
+//     const { primaryWallet } = useDynamicContext();
 
-  // a smart account signer you can use as an owner on ISmartContractAccount
-  const dynamicSigner: SmartAccountSigner = new WalletClientSigner(
-    dynamicProvider,
-    "dynamic" // signer type
-  );
-  console.log(dynamicSigner)
-  const provider = createModularAccountAlchemyClient({
-    apiKey: import.meta.env.VITE_PUBLIC_ALCHEMY_API_KEY,
-    chain,
-    signer: dynamicSigner,
-  });
+//     const dynamicProvider = primaryWallet?.connector?.getWalletClient();
 
-  console.log("provider:", provider);
+//     console.log("dynamicProvider:", dynamicProvider);
 
-  async function setNumber(value) {
-    if (!dynamicProvider) {
-      console.error('Wallet provider is not initialized.');
-      return;
-    }
-    const signer = dynamicProvider.getSigner();
-    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
-    try {
-      const tx = await counterContract.setNumber(value);
-      await tx.wait();
-      console.log(`Number set to ${value}`);
-    } catch (error) {
-      console.error('Error setting number:', error);
-    }
-  }
+//     // a smart account signer you can use as an owner on ISmartContractAccount
+//     const dynamicSigner: SmartAccountSigner = new WalletClientSigner(
+//       dynamicProvider,
+//       "dynamic" // signer type
+//     );
+//     console.log(dynamicSigner)
+//     const counterContract = new ethers.Contract(counterAddress, CounterABI, dynamicSigner);
+//     try {
+//       const number = await counterContract.getNumber();
+//       setCurrentNumber(number.toString());
+//     } catch (error) {
+//       console.error('Error fetching number:', error);
+//       setCurrentNumber('Error fetching number');
+//     }
+//   };
 
-  const [inputValue, setInputValue] = React.useState('');
-  const [currentNumber, setCurrentNumber] = React.useState('Fetching...');
+//   React.useEffect(() => {
+//     fetchNumber();
+//   }, []);
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+//   const handleSubmit = async () => {
+//     const number = parseInt(inputValue, 10);
+//     if (!isNaN(number)) {
+//       await setNumber(number);
+//     }
+//   };
 
-  const fetchNumber = async () => {
-    if (!dynamicProvider) {
-      console.error('Wallet provider is not initialized.');
-      return;
-    }
-    const signer = dynamicProvider.getSigner();
-    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
-    try {
-      const number = await counterContract.getNumber();
-      setCurrentNumber(number.toString());
-    } catch (error) {
-      console.error('Error fetching number:', error);
-      setCurrentNumber('Error fetching number');
-    }
-  };
-
-  React.useEffect(() => {
-    fetchNumber();
-  }, []);
-
-  const handleSubmit = async () => {
-    const number = parseInt(inputValue, 10);
-    if (!isNaN(number)) {
-      await setNumber(number);
-    }
-  };
-
-  return (
-    <div>
-      <input type="number" value={inputValue} onChange={handleInputChange} />
-      <button onClick={handleSubmit}>Set Number</button>
-      <div>Current Number: {currentNumber}</div>
-      <button onClick={fetchNumber}>Refresh Number</button>
-    </div>
-  );
-}
+//   return (
+//     <div>
+//       {/* <input type="number" value={inputValue} onChange={handleInputChange} /> */}
+//       {/* <button onClick={handleSubmit}>Set Number</button> */}
+//       <div>Current Number: {currentNumber}</div>
+//       <button onClick={fetchNumber}>Refresh Number</button>
+//     </div>
+//   );
+// }
 
 function App() {
   return (
     <>
-      <div>
-        <DynamicContextProvider
-          settings={{
-            environmentId: import.meta.env.VITE_DYNAMIC_ID,
-            walletConnectors: [EthereumWalletConnectors],
-          }}
-        >
-          <DynamicWidget />
-          <Test />
-        </DynamicContextProvider>
-      </div>
+      <DynamicWidget />
+      {/* <Test /> */}
     </>
   );
 }
