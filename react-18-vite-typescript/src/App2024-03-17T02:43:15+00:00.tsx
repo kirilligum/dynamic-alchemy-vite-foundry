@@ -19,48 +19,32 @@ function App() {
   const [currentNumber, setCurrentNumber] = React.useState('Fetching...');
 
 
-  const { primaryWallet, network } = useDynamicContext();
+  const { primaryWallet } = useDynamicContext();
   const inc = async () => {
     if (!primaryWallet) return;
-    const publicClient: PublicClient = await primaryWallet.connector.getPublicClient();
-    const walletClient: WalletClient = await primaryWallet.connector.getWalletClient(network);
-    //const signer =  await primaryWallet.connector.ethers.getSigner();
-    //const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
+    const signer = await primaryWallet.connector.ethers.getSigner();
+    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
     try {
-      const account = (await walletClient.getAddresses());
-      console.log(account, primaryWallet.address)
-      const { request } = await publicClient.simulateContract({
-        // @ts-ignore
-        account: primaryWallet.address,
-        address: counterAddress,
-        abi: CounterABI,
-        functionName: 'increment',
-      })
-      const hash = await walletClient.writeContract(request)
-      //const tx = await counterContract.increment();
+      const tx = await counterContract.increment();
       //console.log("data", data);
-      console.log('tx hash', hash);
+      console.log('tx hash', tx.hash);
+      await tx.wait();
+      console.log('tx complete!');
+
     } catch (error) {
       console.error('Error inc number:', error);
     }
   }
   const fetchNumber = async () => {
     if (!primaryWallet) return;
-    //const signer =  await primaryWallet.connector.ethers.getSigner();
-    //const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
+    const signer = await primaryWallet.connector.ethers.getSigner();
+    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
 
-    const publicClient = await primaryWallet.connector.getPublicClient();
     try {
-      const data = await publicClient.readContract({
-        address: counterAddress,
-        abi: CounterABI,
-        functionName: 'getNumber',
-        args: []
-      })
-      //const number = await counterContract.getNumber();
-      console.log("data", data);
-      //console.log('number', number);
-      setCurrentNumber(data.toString());
+      const number = await counterContract.getNumber();
+      //console.log("data", data);
+      console.log('number', number);
+      setCurrentNumber(number.toString());
     } catch (error) {
       console.error('Error fetching number:', error);
       setCurrentNumber('Error fetching number');
