@@ -1,11 +1,12 @@
 import React from 'react';
-import { Contract, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import CounterABI from '../../abi/Counter.json'; // Adjust the path to your ABI
 // import CounterABI from '../../foundry/out/Counter.sol/Counter.json'; // Adjust the path to your ABI
 const counterAddress = '0xd5888F0a82235B038693e0e4A24be9f5c9602272'; // Replace with your contract's address
+
 import { useEffect, useState } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { createWalletClient, custom, PublicClient, type WalletClient } from "viem";
+import { createWalletClient, custom, type WalletClient } from "viem";
 import {
   DynamicWidget,
 } from "@dynamic-labs/sdk-react-core";
@@ -20,30 +21,14 @@ function App() {
 
 
   const { primaryWallet } = useDynamicContext();
-  const inc = async () => {
-    if (!primaryWallet) return;
-    const signer = await primaryWallet.connector.ethers.getSigner();
-    const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
-    try {
-      const tx = await counterContract.increment();
-      //console.log("data", data);
-      console.log('tx hash', tx.hash);
-      await tx.wait();
-      console.log('tx complete!');
-
-    } catch (error) {
-      console.error('Error inc number:', error);
-    }
-  }
   const fetchNumber = async () => {
     if (!primaryWallet) return;
-    const signer = await primaryWallet.connector.ethers.getSigner();
+    const signer = await primaryWallet.connector.ethers?.getSigner();
+    console.log("signer", signer);
     const counterContract = new ethers.Contract(counterAddress, CounterABI, signer);
-
     try {
       const number = await counterContract.getNumber();
-      //console.log("data", data);
-      console.log('number', number);
+      console.log("number", number.toString());
       setCurrentNumber(number.toString());
     } catch (error) {
       console.error('Error fetching number:', error);
@@ -60,8 +45,6 @@ function App() {
       <DynamicWidget />
       <div>Current Number: {currentNumber}</div>
       <button onClick={fetchNumber}>Refresh Number</button>
-      <button onClick={inc}>Inc Number</button>
-
       {/* <Test /> */}
     </>
   );
